@@ -343,3 +343,46 @@
     object-fit: cover;
   }
   
+  .image-slider {
+    display: flex; /* Changed from grid to flex for better alignment */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between images */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    padding: 10px 0;
+  }
+  
+  .image-slider::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari */
+  }
+  
+  .slider-item {
+    scroll-snap-align: center;
+    max-width: 100%; /* Prevents overflow */
+    max-height: 300px; /* Scales to fit smaller screens */
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .slider-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .image-row img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 10px auto; /* Ensures proper spacing */
+  }
+  
+  .image-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
