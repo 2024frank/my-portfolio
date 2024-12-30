@@ -317,3 +317,29 @@
     }
   }
   
+  .image-slider {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+  
+  .image-slider::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+  
+  .slider-item {
+    scroll-snap-align: center;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+    height: auto; /* Ensure it scales properly */
+    max-height: 200px; /* Adjust as needed */
+    object-fit: cover;
+  }
+  
