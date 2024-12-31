@@ -1,13 +1,81 @@
-// Tab functionality
-document.querySelectorAll(".tab-button").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+// Tab functionality with swipe support
+const tabButtons = document.querySelectorAll(".tab-button");
+const tabContents = document.querySelectorAll(".tab-content");
+const tabsContainer = document.querySelector(".tabs");
 
-    button.classList.add("active");
-    document.getElementById(button.dataset.tab).classList.add("active");
+// Make tabs container horizontally scrollable
+tabsContainer.style.overflowX = 'auto';
+tabsContainer.style.WebkitOverflowScrolling = 'touch';
+
+// Function to switch tabs
+function switchTab(targetTab) {
+  tabButtons.forEach(btn => btn.classList.remove("active"));
+  tabContents.forEach(content => content.classList.remove("active"));
+
+  const targetButton = document.querySelector(`[data-tab="${targetTab}"]`);
+  targetButton.classList.add("active");
+  document.getElementById(targetTab).classList.add("active");
+
+  // Scroll the target button into view
+  targetButton.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'center'
+  });
+}
+
+// Add click event listeners to tab buttons
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    switchTab(button.dataset.tab);
   });
 });
+
+// Swipe detection variables
+let touchStartX = 0;
+let touchEndX = 0;
+const minSwipeDistance = 50;
+
+// Get array of tab IDs in order
+const tabOrder = Array.from(tabButtons).map(btn => btn.dataset.tab);
+
+// Function to get next/previous tab
+function getAdjacentTab(direction) {
+  const currentTab = document.querySelector('.tab-button.active').dataset.tab;
+  const currentIndex = tabOrder.indexOf(currentTab);
+  
+  if (direction === 'next') {
+    return tabOrder[(currentIndex + 1) % tabOrder.length];
+  } else {
+    return tabOrder[(currentIndex - 1 + tabOrder.length) % tabOrder.length];
+  }
+}
+
+// Touch event handlers
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+// Handle swipe gesture
+function handleSwipe() {
+  const swipeDistance = touchEndX - touchStartX;
+  
+  if (Math.abs(swipeDistance) > minSwipeDistance) {
+    // Left swipe
+    if (swipeDistance < 0) {
+      switchTab(getAdjacentTab('next'));
+    }
+    // Right swipe
+    else {
+      switchTab(getAdjacentTab('prev'));
+    }
+  }
+}
 
 // Matrix animation
 const canvas = document.createElement("canvas");
@@ -76,7 +144,7 @@ document.querySelectorAll('.image-slider').forEach(slider => {
   });
 });
 
-// Centering the slider content
+// Centering the image slider content
 document.querySelectorAll('.image-slider').forEach(slider => {
   const centerContent = () => {
     const sliderWidth = slider.offsetWidth;
@@ -92,3 +160,10 @@ document.querySelectorAll('.image-slider').forEach(slider => {
   window.addEventListener('resize', centerContent);
 });
 
+// Handle window resize for matrix canvas
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drops.length = Math.floor(canvas.width / 20);
+  drops.fill(1);
+});
