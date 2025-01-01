@@ -34,7 +34,7 @@ tabButtons.forEach(button => {
 // Swipe detection variables
 let touchStartX = 0;
 let touchEndX = 0;
-const minSwipeDistance = 50;
+const minSwipeDistance = 100;
 
 // Get array of tab IDs in order
 const tabOrder = Array.from(tabButtons).map(btn => btn.dataset.tab);
